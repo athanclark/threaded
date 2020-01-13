@@ -5,15 +5,14 @@ license:             BSD3
 author:              "Athan Clark"
 maintainer:          "athan.clark@gmail.com"
 copyright:           "2020 Athan Clark"
-category:            Concurrent
 
 extra-source-files:
 - README.md
 - ChangeLog.md
 
 # Metadata used when publishing your package
-# synopsis:            Short description of your package
-# category:            Web
+synopsis:            Manage concurrently operating threads without having to spark them
+category:            Concurrent
 
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
