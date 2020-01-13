@@ -6,34 +6,28 @@
   , ScopedTypeVariables
   #-}
 
-module Control.Concurrent.Threaded where
+module Control.Concurrent.Threaded.Hash where
 
+import Control.Concurrent.Threaded (ThreadedInternal (..))
 import Control.Concurrent.Async (Async, async, cancel)
 import Control.Concurrent.Chan.Scope (Scope (Read, Write))
 import Control.Concurrent.Chan.Extra (ChanScoped (readOnly, allowReading, writeOnly, allowWriting))
 import Control.Concurrent.STM (atomically)
 import Control.Concurrent.STM.TChan.Typed (TChanRW, newTChanRW, readTChanRW, writeTChanRW)
-import Control.Concurrent.STM.TMapMVar (TMapMVar, newTMapMVar, tryObserve, insertForce, tryLookup)
+import Control.Concurrent.STM.TMapMVar.Hash (TMapMVar, newTMapMVar, tryObserve, insertForce, tryLookup)
 import Control.Monad (forever)
 import Control.Monad.IO.Class (MonadIO (liftIO))
 import Control.Monad.Trans.Control.Aligned (MonadBaseControl (liftBaseWith))
 import Data.Singleton.Class (Extractable (runSingleton))
-
-
-
-data ThreadedInternal incoming outgoing = ThreadedInternal
-  { thread :: Async () -- ^ The process's execution thread
-  , outputRelay :: Async () -- ^ The thread that relays the process's output to the main output
-  , threadInput :: TChanRW 'Read incoming -- ^ The process's isolated input
-  , threadOutput :: TChanRW 'Write outgoing -- ^ The process's isolated output
-  }
+import Data.Hashable (Hashable)
 
 
 -- | Segregates concurrently operating threads by some key type @k@. Returns the
 -- thread that processes all other threads (this function is non-blocking), and the
 -- channel that dispenses the outputs from each thread.
 threaded :: forall m stM k input output
-          . Ord k
+          . Hashable k
+         => Eq k
          => Show k
          => MonadIO m
          => MonadBaseControl IO m stM

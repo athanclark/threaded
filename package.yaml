@@ -24,6 +24,7 @@ dependencies:
 - async
 - chan
 - extractable-singleton
+- hashable
 - monad-control-aligned
 - mtl
 - stm
